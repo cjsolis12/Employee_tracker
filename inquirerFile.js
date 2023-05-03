@@ -67,6 +67,22 @@ const questions = [
           },
           {
             type: "input",
+            name: "department",
+            message: "Enter the employee's department:",
+            when: function (answers) {
+              return answers.options === "Add an Employee";
+            },
+          },
+          {
+            type: "input",
+            name: "salary",
+            message: "Enter the employee's salary:",
+            when: function (answers) {
+              return answers.options === "Add an Employee";
+            },
+          },
+          {
+            type: "input",
             name: "manager",
             message: "Enter the employee's manager:",
             when: function (answers) {
