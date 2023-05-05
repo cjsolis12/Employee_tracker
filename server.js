@@ -13,31 +13,82 @@ const dbConfig = {
 
 async function sqlConnection() {
   const connection = await mysql.createConnection(dbConfig);
-
   //Prompt the user for input
-  const answers = await inquirer.prompt(questions).then((answers) => {
+  inquirer.prompt(questions).then((answers) => {
     // Handle the user's input
     switch (answers.options) {
       case "View All Departments":
-        const [departments] = connection.query("SELECT * FROM departments");
-        console.log(departments);
+        connection.query("SELECT * FROM department", function (err, results) {
+          if (err) throw err;
+          console.table(results);
+        });
         break;
       case "View All Roles":
-        const [roles] = connection.query("SELECT * FROM role");
-        console.log(roles);
+        connection.query("SELECT role.id, role.title, role.salary, department.table_name AS department FROM role JOIN department ON role.department_id = department.id", function (err, results) {
+          if (err) throw err;
+          console.table(results);
+        });
         break;
-      case "View ALL Employees":
-        const [employees] = connection.query("SELECT * FROM employee");
-        console.log(employees);
+      case "View All Employees":
+        connection.query(
+          "SELECT e.id, e.first_name, e.last_name, r.title AS role, d.table_name AS department, r.salary, m.first_name AS manager_first_name, m.last_name AS manager_last_name FROM employee e JOIN role r ON e.role_id = r.id JOIN department d ON r.department_id = d.id LEFT JOIN employee m ON e.manager_id = m.id",
+          function (err, results) {
+            if (err) {
+              console.error(err);
+            } else {
+              const tableData = results.map((row) => {
+                return {
+                  id: row.id,
+                  first_name: row.first_name,
+                  last_name: row.last_name,
+                  role: row.role,
+                  department: row.department,
+                  salary: row.salary,
+                  managers: `${row.manager_first_name} ${row.manager_last_name}`,
+                };
+              });
+              console.table(tableData);
+            }
+          }
+        );
         break;
       case "Add a Department":
-        connection.query(`INSERT INTO department (table_name) VALUES ('${answers.departmentName}')`);
-        console.log("Department added successfully.");
+        connection.query(
+          `INSERT INTO employee_db.department(id,table_name) VALUES (null, '${answers.departmentName}')`,
+          function (err, results) {
+            if (err) {
+              console.err(err);
+              return;
+            }
+            console.log("Department added successfully.");
+            connection.query(
+              "SELECT * FROM department",
+              function (err, results) {
+                if (err) {
+                  console.err(err);
+                  return;
+                }
+                console.table(results);
+              }
+            );
+          }
+        );
         break;
       case "Add a Role":
+        const values = [
+          answers.roleTitle,
+          answers.roleSalary,
+          answers.roleDepartment,
+        ];
         connection.query(
-          "INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)",
-          [answers.roleTitle, answers.roleSalary, answers.roleDepartment]
+          `INSERT INTO role (title, salary, department_id) VALUES ('${answers.roleTitle}', '${answers.roleSalary}', '${answers.roleDepartment}')`,
+          function (err, results) {
+            if (err) {
+              console.err(err);
+              return;
+            }
+            console.log("Role added successfully!");
+          }
         );
         console.log("Role added successfully.");
         break;
@@ -68,9 +119,6 @@ async function sqlConnection() {
     }
     console.log(answers);
   });
-
-  // Close the database connection
-  connection.end();
 }
 
 sqlConnection();
