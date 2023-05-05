@@ -75,11 +75,6 @@ async function sqlConnection() {
         );
         break;
       case "Add a Role":
-        const values = [
-          answers.roleTitle,
-          answers.roleSalary,
-          answers.roleDepartment,
-        ];
         connection.query(
           `INSERT INTO role (title, salary, department_id) VALUES ('${answers.roleTitle}', '${answers.roleSalary}', '${answers.roleDepartment}')`,
           function (err, results) {
@@ -88,6 +83,16 @@ async function sqlConnection() {
               return;
             }
             console.log("Role added successfully!");
+            connection.query(
+              "SELECT role.id, role.title, role.salary, department.table_name AS department FROM role JOIN department ON role.department_id = department.id",
+              function (err, results) {
+                if (err) {
+                  console.err(err);
+                  return;
+                }
+                console.table(results);
+              }
+            );
           }
         );
         console.log("Role added successfully.");
