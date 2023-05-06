@@ -1,5 +1,4 @@
 # Employee_tracker
-# Professional-README-Generator
 
  
 ## Description
