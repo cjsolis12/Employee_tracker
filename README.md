@@ -24,6 +24,8 @@ This command line tool uses the NPM package ‘Inquirer 8.24’ to give the user
   
   
    ![screenshot](assets/employee_tracker.png)
+   
+   https://drive.google.com/file/d/1lZp4kcsQK0_u1_d0K5GErwRjtEOQSzZp/view
   
 
    
