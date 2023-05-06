@@ -15,8 +15,7 @@ const mysql = require("mysql2");
           "Add a Department",
           "Add a Role",
           "Add an Employee",
-          "Update an Employee Role",
-          "Exit"
+          "Update an Employee Role"
         ],
     },
   

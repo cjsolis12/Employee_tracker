@@ -22,6 +22,7 @@ async function sqlConnection() {
       case "View All Departments":
         connection.query("SELECT * FROM department", function (err, results) {
           if (err) throw err;
+          console.log(""); // Add a line break
           console.table(results);
         });
         break;
@@ -30,6 +31,7 @@ async function sqlConnection() {
           "SELECT role.id, role.title, role.salary, department.table_name AS department FROM role JOIN department ON role.department_id = department.id",
           function (err, results) {
             if (err) throw err;
+            console.log(""); // Add a line break
             console.table(results);
           }
         );
@@ -52,6 +54,7 @@ async function sqlConnection() {
                   managers: `${row.manager_first_name} ${row.manager_last_name}`,
                 };
               });
+              console.log(""); // Add a line break
               console.table(tableData);
             }
           }
@@ -73,6 +76,7 @@ async function sqlConnection() {
                   console.err(err);
                   return;
                 }
+                console.log(""); // Add a line break
                 console.table(results);
               }
             );
@@ -95,6 +99,7 @@ async function sqlConnection() {
                   console.err(err);
                   return;
                 }
+                console.log(""); // Add a line break
                 console.table(results);
               }
             );
@@ -114,6 +119,7 @@ async function sqlConnection() {
                 if (err) throw err;
 
                 // Display the updated table to the user
+                console.log(""); // Add a line break
                 console.table(res);
               }
             );
@@ -179,6 +185,8 @@ async function sqlConnection() {
                             return;
                           }
                           console.log("Employee role updated successfully!");
+
+                          console.log(""); // Add a line break
         
                           // Display the updated employee table
                           connection.query(
